@@ -22,7 +22,7 @@ RUN /usr/local/go/bin/go version
 RUN go version
 RUN mkdir -p /go/src/github.com/hyperledger
 WORKDIR /go/src/github.com/hyperledger/
-RUN git clone https://github.com/jcs47/fabric.git
+RUN git clone https://github.com/danielporto/fabric.git
 WORKDIR /go/src/github.com/hyperledger/fabric/
 
 RUN pip install --upgrade pip 
