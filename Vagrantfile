@@ -41,8 +41,8 @@ Vagrant.configure("2") do |config|
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
-  #config.vm.network "public_network", :bridge => "enp3s0", nic_type: "82545EM"
-  config.vm.network "public_network", :bridge => "enp3s0"
+  config.vm.network "public_network", :bridge => "enp3s0", nic_type: "82545EM"
+  #config.vm.network "public_network", :bridge => "enp3s0"
 
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
@@ -63,9 +63,9 @@ Vagrant.configure("2") do |config|
     #   # Customize the amount of memory on the VM:
     vb.memory = "35000"
     #vb.customize ["modifyvm", :id, "--cpuexecutioncap", "33"]
-    vb.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+#    vb.customize ["modifyvm", :id, "--nictype1", "virtio"]
+#    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+#    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
   end
   #
   # View the documentation for the provider you are using for more
@@ -84,8 +84,8 @@ Vagrant.configure("2") do |config|
     runuser -l vagrant -c 'curl -s "https://get.sdkman.io" | bash'
     runuser -l vagrant -c 'source /home/vagrant/.sdkman/bin/sdkman-init.sh && sdk install java 8.0.252-zulu && sdk install ant && sdk flush archives'
     
-    # install go
-    curl -O https://dl.google.com/go/go1.10.3.linux-amd64.tar.gz  && tar -xvf go1.10.3.linux-amd64.tar.gz && mv go /usr/local  && rm go1.10.3.linux-amd64.tar.gz     
+    # install go   
+    curl -O https://dl.google.com/go/go1.10.3.linux-amd64.tar.gz  && tar -x#vf go1.10.3.linux-amd64.tar.gz && mv go /usr/local  && rm go1.10.3.linux-amd64.tar.gz     
     runuser -l vagrant -c 'mkdir -p /home/vagrant/go'
 
     pip install --upgrade pip
