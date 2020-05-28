@@ -41,6 +41,7 @@ Vagrant.configure("2") do |config|
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
+  #config.vm.network "public_network", :bridge => "enp3s0", nic_type: "82545EM"
   config.vm.network "public_network", :bridge => "enp3s0"
 
   # Share an additional folder to the guest VM. The first argument is
@@ -62,7 +63,9 @@ Vagrant.configure("2") do |config|
     #   # Customize the amount of memory on the VM:
     vb.memory = "35000"
     #vb.customize ["modifyvm", :id, "--cpuexecutioncap", "33"]
-
+    vb.customize ["modifyvm", :id, "--nictype1", "virtio"]
+    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
   end
   #
   # View the documentation for the provider you are using for more
