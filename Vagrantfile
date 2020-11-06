@@ -41,8 +41,7 @@ Vagrant.configure("2") do |config|
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
-  config.vm.network "public_network", :bridge => "enp3s0", nic_type: "82545EM"
-  #config.vm.network "public_network", :bridge => "enp3s0"
+  config.vm.network "public_network", :bridge => "en0"
 
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
@@ -59,9 +58,9 @@ Vagrant.configure("2") do |config|
     # vb.gui = true
   
     #   # customize the number of CPUs
-    vb.cpus = 8
+    vb.cpus = 2
     #   # Customize the amount of memory on the VM:
-    vb.memory = "35000"
+    vb.memory = "8000"
     #vb.customize ["modifyvm", :id, "--cpuexecutioncap", "33"]
 #    vb.customize ["modifyvm", :id, "--nictype1", "virtio"]
 #    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
@@ -82,15 +81,17 @@ Vagrant.configure("2") do |config|
     apt remove -y docker-compose
     # install java
     runuser -l vagrant -c 'curl -s "https://get.sdkman.io" | bash'
-    runuser -l vagrant -c 'source /home/vagrant/.sdkman/bin/sdkman-init.sh && sdk install java 8.0.252-zulu && sdk install ant && sdk flush archives'
+    runuser -l vagrant -c 'source /home/vagrant/.sdkman/bin/sdkman-init.sh && sdk install java 8.0.272-zulu && sdk install ant && sdk flush archives'
     
-    # install go   
-    curl -O https://dl.google.com/go/go1.10.3.linux-amd64.tar.gz  && tar -x#vf go1.10.3.linux-amd64.tar.gz && mv go /usr/local  && rm go1.10.3.linux-amd64.tar.gz     
-    runuser -l vagrant -c 'mkdir -p /home/vagrant/go'
+    # install go
+    curl -O https://dl.google.com/go/go1.10.3.linux-amd64.tar.gz  && tar -xvf go1.10.3.linux-amd64.tar.gz && mv go /usr/local  && rm go1.10.3.linux-amd64.tar.gz     
+    #runuser -l vagrant -c 'mkdir -p /home/vagrant/go'
+    run -l vagrant -c "echo 'export GOPATH=/usr/local/go' >> /home/vagrant/.profile"
+    run -l vagrant -c "echo 'export PATH=\$GOPATH/bin:\$PATH' >> /home/vagrant/.profile"
 
     pip install --upgrade pip
     pip uninstall -y docker-compose
-    curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    curl -L "https://github.com/docker/compose/releases/download/1.27.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
 
     # optimizations
