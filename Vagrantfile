@@ -61,6 +61,8 @@ Vagrant.configure("2") do |config|
     vb.cpus = 2
     #   # Customize the amount of memory on the VM:
     vb.memory = "8000"
+    # vb.customize ["modifyvm", :id, "--vram","128" ]
+
     #vb.customize ["modifyvm", :id, "--cpuexecutioncap", "33"]
 #    vb.customize ["modifyvm", :id, "--nictype1", "virtio"]
 #    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
@@ -78,6 +80,7 @@ Vagrant.configure("2") do |config|
   #   dnf install tmux
     apt update
     apt install -y debconf-utils git-all build-essential python-pip python-dev curl libc6-dev-i386 autoconf software-properties-common zip unzip
+    apt install -y xrdp
     apt remove -y docker-compose
     # install java
     runuser -l vagrant -c 'curl -s "https://get.sdkman.io" | bash'
