@@ -1,0 +1,90 @@
+version: '3.3'
+
+networks:
+  bft_network:
+    driver: bridge
+
+services:
+
+  orderer0:
+    container_name: bft.node.0
+    image: bftsmart/fabric-orderingnode:amd64-1.3.0 
+    networks: 
+      - bft_network
+    command: '0'
+
+  orderer1:
+    container_name: bft.node.1
+    image: bftsmart/fabric-orderingnode:amd64-1.3.0 
+    networks: 
+      - bft_network
+    command: '1'
+    depends_on: 
+      - orderer0
+
+  orderer2:
+    container_name: bft.node.2
+    image: bftsmart/fabric-orderingnode:amd64-1.3.0 
+    networks: 
+      - bft_network
+    command: '2'
+    depends_on: 
+      - orderer0
+
+  orderer3:
+    container_name: bft.node.3
+    image: bftsmart/fabric-orderingnode:amd64-1.3.0 
+    networks: 
+      - bft_network
+    command: '3'
+    depends_on: 
+      - orderer0
+
+
+#------------------------------------------------------------------------
+  frontend1000:
+    container_name: bft.frontend.1000
+    image: bftsmart/fabric-frontend:amd64-1.3.0 
+    networks: 
+      - bft_network
+    command: '1000'
+    depends_on: 
+      - orderer0
+      - orderer1
+      - orderer2
+      - orderer3
+
+  frontend2000:
+    container_name: bft.frontend.2000
+    image: bftsmart/fabric-frontend:amd64-1.3.0 
+    networks: 
+      - bft_network
+    command: '2000'
+    depends_on: 
+      - orderer0
+      - orderer1
+      - orderer2
+      - orderer3
+#------------------------------------------------------------------------
+  peer0:
+    container_name: bft.peer.0
+    image: bftsmart/fabric-peer:amd64-1.3.0 
+    networks: 
+      - bft_network
+    depends_on: 
+      - frontend1000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+
+
+  peer1:
+    container_name: bft.peer.1
+    image: bftsmart/fabric-peer:amd64-1.3.0 
+    networks: 
+      - bft_network
+    depends_on: 
+      - frontend2000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
