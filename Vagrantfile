@@ -58,10 +58,10 @@ Vagrant.configure("2") do |config|
     # vb.gui = true
   
     #   # customize the number of CPUs
-    vb.cpus = 2
+    vb.cpus = 6
     #   # Customize the amount of memory on the VM:
-    vb.memory = "8000"
-    # vb.customize ["modifyvm", :id, "--vram","128" ]
+    vb.memory = "20000"
+    vb.customize ["modifyvm", :id, "--vram","128" ]
 
     #vb.customize ["modifyvm", :id, "--cpuexecutioncap", "33"]
 #    vb.customize ["modifyvm", :id, "--nictype1", "virtio"]
@@ -76,31 +76,39 @@ Vagrant.configure("2") do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
-  #   dnf update --nobest
-  #   dnf install tmux
     apt update
-    apt install -y debconf-utils git-all build-essential python-pip python-dev curl libc6-dev-i386 autoconf software-properties-common zip unzip
-    apt install -y xrdp
+    apt install -y debconf-utils\
+                   git-all\
+                   build-essential\
+                   python-pip\
+                   python-dev\
+                   curl\
+                   libc6-dev-i386\
+                   autoconf\
+                   software-properties-common\
+                   zip\ 
+                   unzip
     apt remove -y docker-compose
+
+    # environment
+    apt install zsh 
+    apt install -y tmux
+    runuser -l vagrant -c 'curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh '
+    pip install --upgrade pip
+    pip uninstall -y docker-compose
+    # version of compose 1.25.5 is required because it is compatible with python2.7
+    curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
+                
     # install java
     runuser -l vagrant -c 'curl -s "https://get.sdkman.io" | bash'
     runuser -l vagrant -c 'source /home/vagrant/.sdkman/bin/sdkman-init.sh && sdk install java 8.0.272-zulu && sdk install ant && sdk flush archives'
     
     # install go
-    curl -O https://dl.google.com/go/go1.10.3.linux-amd64.tar.gz  && tar -xvf go1.10.3.linux-amd64.tar.gz && mv go /usr/local  && rm go1.10.3.linux-amd64.tar.gz     
-    #runuser -l vagrant -c 'mkdir -p /home/vagrant/go'
+    curl -O https://dl.google.com/go/go1.10.3.linux-amd64.tar.gz  && tar -xvf go1.10.3.linux-amd64.tar.gz && mv go /usr/local && rm go1.10.3.linux-amd64.tar.gz
+    chown -R vagrant.vagrant /usr/local/go 
     run -l vagrant -c "echo 'export GOPATH=/usr/local/go' >> /home/vagrant/.profile"
-    run -l vagrant -c "echo 'export PATH=\$GOPATH/bin:\$PATH' >> /home/vagrant/.profile"
-
-    pip install --upgrade pip
-    pip uninstall -y docker-compose
-    curl -L "https://github.com/docker/compose/releases/download/1.27.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    chmod +x /usr/local/bin/docker-compose
-
-    # optimizations
-    apt install zsh 
-    runuser -l vagrant -c ' git clone https://github.com/danielporto/zsh-dotfiles.git /home/vagrant/.dotfiles'
-    # runuser -l vagrant -c ' /home/vagrant/.dotfiles/install'
+    run -l vagrant -c "echo 'export PATH=$GOPATH/bin:$PATH' >> /home/vagrant/.profile" 
 
   SHELL
 end
