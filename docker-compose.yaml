@@ -88,3 +88,15 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker/volumes:/var/lib/docker/volumes
+
+  # this is a hack to handle a bug with fabric. peers require ccenv:latest to initiate the channel
+  # this service only run in preparation to ensure that the correct version is available and it is
+  # re-tagged to latest as required.
+  ccenv:
+      image:  docker
+      command: sh -c 'docker pull hyperledger/fabric-ccenv:amd64-1.3.0  && docker image tag hyperledger/fabric-ccenv:amd64-1.3.0 hyperledger/fabric-ccenv:latest'
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+      # deploy:
+      #     placement:
+      #         constraints: [node.hostname == inesc-oc5]
