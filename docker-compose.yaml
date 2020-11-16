@@ -1,7 +1,40 @@
-version: '3.3'
+version: '3.5'
+
+# USING DOCKER COMPOSE assuming the containers were built (local):
+
+# 1. initialize the network and create the containers:
+
+# ```bash
+# docker-compose up --no-start
+# ```
+
+# 2. initialize the orderers:
+
+# ```bash
+# docker-compose start orderer0 orderer1 orderer2 orderer3
+# ```
+
+# 3. download the ccenv (BUGFIX):
+
+# ```bash
+# docker-compose start ccenv
+# ```
+
+# 4. start frontends
+
+# ```bash
+# docker-compose start frontend1000 frontend2000
+# ```
+
+# 5. start peers and the rest of the system and attach the log output
+
+# ```bash
+# docker-compose up
+# ```
 
 networks:
   bft_network:
+    name: bft_network
     driver: bridge
 
 services:
@@ -29,7 +62,7 @@ services:
       - bft_network
     command: '2'
     depends_on: 
-      - orderer0
+      - orderer1
 
   orderer3:
     container_name: bft.node.3
@@ -38,7 +71,7 @@ services:
       - bft_network
     command: '3'
     depends_on: 
-      - orderer0
+      - orderer2
 
 
 #------------------------------------------------------------------------
@@ -97,6 +130,5 @@ services:
       command: sh -c 'docker pull hyperledger/fabric-ccenv:amd64-1.3.0  && docker image tag hyperledger/fabric-ccenv:amd64-1.3.0 hyperledger/fabric-ccenv:latest'
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
-      # deploy:
-      #     placement:
-      #         constraints: [node.hostname == inesc-oc5]
+      networks: 
+        - bft_network
