@@ -10,6 +10,12 @@ function main () {
 	fi
 
 	docker pull hyperledger/fabric-peer:amd64-1.3.0
+	if [[ "$(docker images -q hyperledger/fabric-peer:amd64-1.3.0 2> /dev/null)" == "" ]]; then
+	  # do something
+	  echo "The required docker image is not build yet. Run the create-container-images-multipeers.sh script first."
+	  echo "Anternativelly uncomment the pull command in this script to use the default container."
+	  exit
+	fi
 
 	docker create --name="peer-temp" "hyperledger/fabric-peer:amd64-1.3.0" > /dev/null
 	id=$(docker ps -aqf "name=peer-temp")
