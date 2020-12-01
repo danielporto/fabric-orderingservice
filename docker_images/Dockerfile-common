@@ -1,8 +1,7 @@
 FROM ubuntu:16.04
 
 #Uncomment the instructions below to install OpenJRE
-RUN apt-get update
-RUN apt-get -y install openjdk-8-jre
+RUN apt-get update && apt-get -y install openjdk-8-jre && apt-get clean all
 
 #Uncomment the instructions below to install Oracle JDK 8
 #RUN add-apt-repository ppa:webupd8team/java

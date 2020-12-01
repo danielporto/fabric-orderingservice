@@ -30,6 +30,7 @@ function main() {
 	cp ../dist/BFT-Proxy.jar ./temp
     # copy default BFTSmart config to temp
 	cp -r ../config ./temp/config
+    cp ./temp/config/node4o4p4f.config ./temp/config/node.config
 	cp -r ../lib ./temp/lib
     mkdir -p ./temp/fabric_conf
     
