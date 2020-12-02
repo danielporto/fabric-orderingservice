@@ -84,25 +84,28 @@ function main() {
     echo "------------------------------------------------------------------------"
 	docker-compose build tools
     docker run --rm -v $(pwd)/temp/sampleconfig:/conf -w /conf -it bftsmart/fabric-tools:amd64-1.3.0 cryptogen generate --config=./crypto-config.yaml
+    sudo chown -R $(id -u) temp
 
     echo "------------------------------------------------------------------------"
     echo "Building container images common"
     echo "------------------------------------------------------------------------"
 	docker-compose build common 
+    sudo chown -R $(id -u) temp
     echo "------------------------------------------------------------------------"
     echo "Building container images orderingnode"
     echo "------------------------------------------------------------------------"
 	docker-compose build orderingnode
+    sudo chown -R $(id -u) temp
     echo "------------------------------------------------------------------------"
     echo "Building container images frontend"
     echo "------------------------------------------------------------------------"
 	docker-compose build frontend
+    sudo chown -R $(id -u) temp
     echo "------------------------------------------------------------------------"
     echo "Building container images  peers"
     echo "------------------------------------------------------------------------"
 	docker-compose build peer
-    
-    exit
+    sudo chown -R $(id -u) temp
     
 	if [ ! -z "$2" ] && [ $2 -eq "clean" ] ; then
 		docker rmi bftsmart/fabric
